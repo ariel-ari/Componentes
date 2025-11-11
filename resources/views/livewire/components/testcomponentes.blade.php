@@ -21,4 +21,18 @@ new class extends Component {
         ]"
         :filters="[$nameFilter]"
         :perPage="5"/>
+
+    <livewire:components.datatable
+        tableId="users-all-1"
+        modelClass="App\Models\User"
+        scopeMethod="search"
+        title="Usuarios Registrados"
+        :columns="[
+            'id' => 'ID',
+            'name' => 'Nombre',
+            'email' => 'Correo',
+            'created_at' => 'Fecha de creacion'
+        ]"
+        :filters="[$nameFilter]"
+        :perPage="5"/>
 </div>

@@ -6,14 +6,18 @@ use Livewire\WithPagination;
 new class extends Component {
     use WithPagination;
     
-    public string $title = 'Mi Tabla de prueba';
-    public array $columns = [];
-    public string $tableId = 'default';
-    public string $modelClass = '';
-    public array $filters = [];
+    public string $title = 'Mi Tabla de prueba'; ///Titulo tabla
+    public array $columns = []; //Columnas [name => "Nombre] "
+    public string $tableId = 'default'; //Identificador de la tabla
+    public string $modelClass = ''; // Modelo 'App/model/User'
+    public array $filters = []; // ["nombres, email"]
     public string $scopeMethod = ''; // Nombre del scope a usar
-    public int $perPage = 10;
-    public string $search = '';
+    public int $perPage = 10; //numeros de paginas
+    public string $search = ''; //Buscar
+
+    //
+    public array $selected = []; // [1,2,3,4,5]
+    public bool $selectAll = false; //  true
     
     public function with()
     {
@@ -38,7 +42,6 @@ new class extends Component {
                 }
             }
         }
-        
         // Búsqueda interna
         if (!empty($this->search)) {
             $query->where(function($q) {
@@ -46,13 +49,11 @@ new class extends Component {
                     $q->orWhere($field, 'like', '%' . $this->search . '%');
                 }
             });
-        }
-        
+        }   
         return [
             'items' => $query->paginate($this->perPage, ['*'], $this->tableId . 'Page')
         ];
     }
-    
     public function updatedSearch()
     {
         $this->resetPage($this->tableId . 'Page');
@@ -69,10 +70,12 @@ new class extends Component {
             placeholder="Buscar en tabla..."
             class="border rounded px-3 py-2 mt-2">
     </div>
-    
     <table class="w-full border">
         <thead>
             <tr class="bg-gray-100">
+                <th class="px-4 py-1">
+                    <input type="checkbox" wire:model.live='selectAll' class="form-checkbox h-4 w-4 rounded border-gray">
+                </th>
                 @foreach ($columns as $field => $label)
                     <th class="px-6 py-3 text-center border">{{ $label }}</th>
                 @endforeach
@@ -93,7 +96,6 @@ new class extends Component {
             @endforelse
         </tbody>
     </table>
-    
     <div class="mt-4">
         {{ $items->links() }}
     </div>
